@@ -1,0 +1,14 @@
+.logo {
+	text-align: center;
+}
+
+.offline {
+	visibility: hidden;
+	color: #f00;
+	font-style: italic;
+}
+
+#map {
+	width: 100%;
+	height: 200px;
+}

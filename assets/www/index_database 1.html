@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Storage Example</title>
+    <script>
+        window.onerror = function(a,b,c){alert(a+"\n"+b+"\n"+c);}
+
+        function printObj(obj) //reads the objects properties
+        {
+            var object ="";// sets the variable 
+            for(var type in obj) 
+            {object += type +"=> " + obj[type] + "<br />";}//loops throught all the object variables
+            document.write(object)
+        } 
+    </script>
+      <script src="js/libs/require.js" data-main="js/mobile"></script>
+
+</head>
+<body>
+    <h1>Example</h1>
+    <p id="add">add records</p>
+    <p id="show">retrieve record</p>
+    
+
+</body>
+</html>
