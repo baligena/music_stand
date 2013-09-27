@@ -1,74 +1,471 @@
-<!doctype html>
-<html class="no-js ui-mobile-rendering" lang="en">
-<head>
-      <title>Backbone.js, Require.js, and jQuery Mobile</title>
-      <meta name="description" content="">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<script src="jquery.min.1.10.2.js"></script>
 
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-
-      <link rel="stylesheet" href="css/libs/jquery.mobile-1.3.1.min.css" />
-
-      <script type="text/javascript" src="js/debug/stacktrace.js"></script>
-
-      <script src="js/libs/require.js" data-main="js/mobile"></script>
-</head>
-<body>
-
-
-
-<div id="categories" data-role="page" data-title="Categories">
-  
-      <div data-role="header">
-            <h1>Categories</h1>
-      </div><!-- /header -->
-  
-      <div data-role="content">
-            <h2>Select a Category Below:</h2>
-            <ul data-role="listview" data-inset="true">
-                  <li></li>
-                             
-       
-            </ul>
-      </div><!-- /content -->
-
-</div>
-
-
-
-<div id="cifra" data-role="page" data-title="cifra">
-
-      <div data-role="header">
-          <h1>cifra</h1>
-      </div><!-- /header -->
-  
-      <div data-role="content">
-            <ul data-role="listview" data-inset="true">
-            </ul>
-            <p></p>
-      </div><!-- /content -->
-
-</div>
-
-
-
-
-<!-- Underscore Template that is used to display all of the Category Models -->
-<script id="categoryItems" type="text/template">
-
-      <% _.each( collection.toJSON(), function( object, id ) { %>
-
-            <li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="c" class="ui-btn ui-btn-up-c ui-btn-icon-right ui-li-has-arrow ui-li ui-first-child ui-last-child">
-            <div class="ui-btn-inner ui-li">
-              <div class="ui-btn-text">
-                <a href="#song?<%= id %>" class="ui-link-inherit"><%= object.first_name %></a>
-              </div>
-              <span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span>
-            </div>
-            </li>
-
-      <% }); %>
+<script>
+//utitity
+//
 
 </script>
 
-</body>
-</html>
+<style>
+#list{
+	/*background: pink;*/
+	/*height: 50px;*/
+}
+.cifra-mono{
+  display: none;
+}
+.cifra, .back {
+  border: 1px solid;
+  padding: 20px;
+  background: lightblue;
+  display: block;
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.back {
+  display: none;
+}
+
+</style>
+
+asdfqwer
+
+<div id="list"></div>
+
+<div class="back">back</div>
+
+
+<div id="songs">
+<pre id="ct_cifra" class="cifra-mono">Intro 2x:  <b class="_i0">C9</b>  <b class="_i1">Bb7M(6)</b>
+
+Primeira Parte:
+ <b class="_i2">C9</b>                                         <b class="_i3">F9</b>
+<div class='first_line'>
+Mesmo sendo assim pobre e pecador Deus me ama</div>
+ <b class="_i4">C9</b>                                           <b class="_i5">F9</b>
+Mesmo sendo falho, mesmo sem merecer Deus  me ama
+
+ <b class="_i6">C9</b>                                            <b class="_i7">F9</b>
+Se eu estou forte, se eu estou de pé Deus  me ama
+ <b class="_i8">C9</b>
+Se eu estou fraco, se eu estou caído
+         <b class="_i9">F9</b>
+Ele não deixa de me amar
+
+ <b class="_i10">C9</b>
+Sem o seu amor, sem o seu perdão
+         <b class="_i11">F9</b>
+O que seria de mim
+ <b class="_i12">C9</b>
+Deus me amou tanto que entregou seu filho
+        <b class="_i13">F9</b>
+Pra morrer em meu lugar
+
+Refrão:
+
+ <b class="_i14">C9</b>
+Deus me ama
+        <b class="_i15">F9</b>
+O seu amor é tão grande, incondicional
+ <b class="_i16">C9</b>
+Deus me ama
+            <b class="_i17">F9</b>
+E ele esta sempre de braços abertos pra mim</pre>
+
+
+
+
+
+<pre class="cifra-mono" id="ct_cifra">Intro: <b class="_i0">Am7</b>  <b class="_i1">G/B</b>  <b class="_i2">B4(7)</b>  <b class="_i3">A</b>  <b class="_i4">G/B</b>  <b class="_i5">G</b>
+<span class="tablatura">
+              <b class="_i6">Am7</b> <b class="_i7">G/B</b>            <b class="_i8">B4(7)</b>
+<span class="cnt">E|<u>------------------</u>0<u>----------</u>0<u>-</u>2<u>----------</u>|
+B|<u>-</u>0<u>-------</u>0<u>--</u>1<u>---</u>3<u>----------</u>1<u>---</u>0<u>--</u>0<u>-</u>0<u>---</u>0<u>-</u>|
+G|<u>-----</u>0<u>---------------</u>0<u>-</u>0<u>-</u>0<u>-----</u>2<u>------</u>2<u>---</u>|
+D|<u>---</u>0<u>---</u>0<u>----------------------------------</u>|
+A|<u>------------</u>0<u>---</u>2<u>-</u>3<u>------------</u>2<u>----------</u>|
+E|<u>-</u>3<u>-------</u>3<u>--------------------------------</u>|
+</span></span>
+
+<span class="tablatura">
+<span class="cnt">E|<u>-</u>2<u>-</u>3<u>---</u>3<u>-</u>2<u>--------------------------------</u>|
+B|<u>------------------------------------------</u>|
+G|<u>-----</u>0<u>------------------------------------</u>|
+D|<u>---------</u>0<u>--------------------------------</u>|
+A|<u>------------------------------------------</u>|
+E|<u>---</u>0<u>--------------------------------------</u>|
+</span></span>
+
+<span class="tablatura">
+          <b class="_i9">A</b> Harm               <b class="_i10">D5(9)/F#</b>
+<span class="cnt">E|<u>----------</u>12<u>------------------------------</u>|
+B|<u>---</u>3/5<u>--</u>5<u>--------</u>0<u>-</u>1<u>-</u>0<u>-</u>1<u>-</u>0<u>----------</u>3<u>-----</u>|
+G|<u>-</u>0<u>------</u>6<u>----</u>2<u>------------</u>0h2<u>-</u>2<u>---</u>2<u>------</u>2|
+D|<u>--------------------------------</u>0<u>------</u>0<u>--</u>|
+A|<u>--------</u>0<u>----------</u>0<u>----------------------</u>|
+E|<u>------------------------</u>3<u>-----</u>2<u>------</u>2<u>----</u>|
+</span></span>
+
+<span class="tablatura">
+       <b class="_i11">Am7</b>
+<span class="cnt">E|<u>------------------------------------------</u>|
+B|<u>---</u>0<u>-</u>1<u>-</u>0<u>-</u>1<u>--------------------------------</u>|
+G|<u>-</u>2<u>----------------------------------------</u>|
+D|<u>------------------------------------------</u>|
+A|<u>-----</u>0<u>------------------------------------</u>|
+E|<u>------------------------------------------</u>|
+</span></span>
+
+<span class="tablatura">
+   <b class="_i12">G/B</b>                   <b class="_i13">G</b>
+<span class="cnt">E|<u>---------------------------</u>3<u>-</u>2<u>------------</u>|
+B|<u>-</u>3<u>-----------------------</u>3<u>---</u>3<u>-</u>5<u>--</u>3<u>-----</u>3<u>-</u>|
+G|<u>---</u>0<u>-</u>0<u>---</u>0<u>-----</u>2/4\2<u>-</u>0<u>-</u>0<u>-------</u>5<u>--</u>4<u>---</u>0<u>---</u>|
+D|<u>------------------------------------</u>0<u>-----</u>|
+A|<u>-</u>2<u>---</u>3<u>-</u>3<u>---</u>3<u>------------------------------</u>|
+E|<u>-----------------------</u>3<u>-----</u>3<u>----</u>3<u>-------</u>|
+</span></span>
+
+<span class="tablatura">
+<span class="cnt">E|<u>------------------------------------------</u>|
+B|<u>------------------------------------------</u>|
+G|<u>-------</u>0<u>----------------------------------</u>|
+D|<u>-----</u>0<u>------------------------------------</u>|
+A|<u>------------------------------------------</u>|
+E|<u>---</u>3<u>--------------------------------------</u>|
+</span></span>
+Primeira Parte:
+          <b class="_i14">G</b>     <b class="_i15">G/B</b>      <b class="_i16">C9</b>  <b class="_i17">G/B</b>
+<div class='first_line'>Espírito Santo, ore por mim</div>
+ <b class="_i18">Am9</b>                  <b class="_i19">D7</b>             <b class="_i20">G4</b> <b class="_i21">G</b>  <b class="_i22">C/G</b>
+Leve pra Deus tudo aquilo que eu preci-so
+          <b class="_i23">G</b>     <b class="_i24">G/B</b>       <b class="_i25">C9</b>    <b class="_i26">G/B</b>
+Espírito Santo, use as palavras
+  <b class="_i27">Am9</b>              <b class="_i28">D7</b>              <b class="_i29">G4</b> <b class="_i30">G</b>  <b class="_i31">Am7</b>  <b class="_i32">G/B</b>
+Que eu necessito usar, mas não consi-go
+
+Dedilhado - Primeira Parte:
+<span class="tablatura">
+   <b class="_i33">G</b>                      <b class="_i34">G/B</b>     <b class="_i35">C9</b>
+<span class="cnt">E|<u>-------</u>3<u>----------------------</u>3<u>-</u>3<u>---------</u>|
+B|<u>-----</u>3<u>------</u>3<u>-------</u>3<u>---</u>3<u>---</u>3<u>---</u>3<u>---</u>3<u>-----</u>|
+G|<u>---</u>0<u>------</u>0<u>---</u>0<u>---</u>0<u>---</u>0<u>---</u>0<u>-----</u>0<u>-</u>0<u>-------</u>|
+D|<u>------------------------------------------</u>|
+A|<u>------------------------</u>2<u>-------</u>3<u>---------</u>|
+E|<u>-</u>3<u>-------</u>3<u>------</u>3<u>-------------------------</u>|
+</span></span>
+
+<span class="tablatura">
+<span class="cnt">E|<u>-</u>3<u>----------------------------------------</u>|
+B|<u>---</u>3<u>--------------------------------------</u>|
+G|<u>-----</u>0<u>------------------------------------</u>|
+D|<u>-------</u>0<u>----------------------------------</u>|
+A|<u>------------------------------------------</u>|
+E|<u>------------------------------------------</u>|
+</span></span>
+
+<span class="tablatura">
+   <b class="_i36">C9</b>      <b class="_i37">G/B</b>      <b class="_i38">Am9</b>           <b class="_i39">D7</b>
+<span class="cnt">E|<u>-----</u>3<u>---</u>3<u>---</u>3<u>----------</u>0<u>-</u>0<u>-----</u>2<u>------</u>2<u>--</u>|
+B|<u>-----</u>3<u>---</u>3<u>---</u>3<u>--------------</u>1<u>---</u>1<u>----</u>1<u>----</u>|
+G|<u>---</u>0<u>---</u>0<u>---</u>0<u>---</u>0<u>------</u>4<u>-------</u>2<u>-</u>2<u>--</u>2<u>------</u>|
+D|<u>--------------------</u>2<u>-----------</u>0<u>---------</u>|
+A|<u>-</u>3<u>-------</u>2<u>--------</u>0<u>-----------------------</u>|
+E|<u>------------------------------------------</u>|
+</span></span>
+
+<span class="tablatura">
+<span class="cnt">E|<u>------------------------------------------</u>|
+B|<u>-</u>1<u>----------------------------------------</u>|
+G|<u>---</u>2<u>--------------------------------------</u>|
+D|<u>-----</u>0<u>------------------------------------</u>|
+A|<u>------------------------------------------</u>|
+E|<u>------------------------------------------</u>|
+</span></span>
+
+<span class="tablatura">
+   <b class="_i40">G4</b> <b class="_i41">G</b>         <b class="_i42">C/G</b>
+<span class="cnt">E|<u>--------------</u>3<u>----</u>3<u>----------------------</u>|
+B|<u>-</u>1<u>--</u>0<u>---------</u>5<u>----</u>5<u>----------------------</u>|
+G|<u>-</u>0<u>--</u>0<u>----</u>0<u>----</u>5<u>------</u>5<u>--------------------</u>|
+D|<u>-------</u>0<u>---</u>0<u>--</u>5<u>--</u>5<u>-----</u>5<u>------------------</u>|
+A|<u>------------------------------------------</u>|
+E|<u>-</u>3<u>--</u>3<u>-------------------------------------</u>|
+</span></span>
+
+<span class="tablatura">
+   <b class="_i43">G4</b> <b class="_i44">G</b>                  <b class="_i45">Am7</b>  <b class="_i46">G/B</b>
+<span class="cnt">E|<u>------------------------------------------</u>|
+B|<u>-</u>1<u>--</u>0<u>---------</u>0<u>--------</u>1<u>----</u>3<u>-------------</u>|
+G|<u>-</u>0<u>--</u>0<u>----</u>0<u>--------</u>0<u>----</u>0<u>----</u>0<u>-------------</u>|
+D|<u>-------</u>0<u>---</u>0<u>----</u>0<u>---</u>0<u>----</u>0<u>----</u>0<u>-----------</u>|
+A|<u>-----------------------</u>0<u>----</u>2<u>-------------</u>|
+E|<u>-</u>3<u>--</u>3<u>---------</u>3<u>---------------------------</u>|
+</span></span>
+Segunda Parte:
+     <b class="_i47">C7M</b>                 <b class="_i48">D/C</b>
+Me ajude nas minhas fraquezas
+     <b class="_i49">Bm7</b>             <b class="_i50">Em7(9)</b>
+Não sei como devo pedir
+          <b class="_i51">Am9</b>    <b class="_i52">C/D</b>                <b class="_i53">Dm7</b> <b class="_i54">F/G</b> <b class="_i55">G</b>
+Espírito Santo, vem interceder por mim
+
+ <b class="_i56">C7M</b>               <b class="_i57">B</b>
+Todas as coisa cooperam pra o bem
+    <b class="_i58">Em</b>       <b class="_i59">D5(9)</b>   <b class="_i60">A5(9)/C#</b>
+Daqueles que amam a ti
+          <b class="_i61">Am9</b>    <b class="_i62">C/D</b>
+Espírito Santo, vem orar por mim
+
+Dedilhado - Segunda Parte:
+<span class="tablatura">
+   <b class="_i63">C7M</b>            <b class="_i64">D/C</b>           <b class="_i65">Bm7</b>
+<span class="cnt">E|<u>-</u>0<u>---</u>3<u>-</u>0<u>------</u>0<u>-</u>2<u>-----</u>2<u>-----</u>2<u>-</u>2<u>---</u>3<u>-</u>2<u>-----</u>|
+B|<u>-</u>0<u>---</u>0<u>-</u>0<u>----</u>0<u>---</u>3<u>---</u>3<u>-----</u>3<u>---</u>3<u>---</u>3<u>-</u>3<u>---</u>2<u>-</u>|
+G|<u>-</u>0<u>-</u>0<u>------</u>0<u>-----</u>2<u>-</u>2<u>-----</u>2<u>-----</u>2<u>-</u>2<u>-----</u>3<u>---</u>|
+D|<u>------------------------------------------</u>|
+A|<u>-</u>3<u>------</u>3<u>-------</u>3<u>-------------</u>2<u>-----</u>2<u>-----</u>|
+E|<u>------------------------------------------</u>|
+</span></span>
+
+<span class="tablatura">
+   <b class="_i66">Em7(9)</b>
+<span class="cnt">E|<u>---------</u>0<u>--------------------------------</u>|
+B|<u>-------</u>3<u>---</u>3<u>------------------------------</u>|
+G|<u>-----</u>0<u>------------------------------------</u>|
+D|<u>---</u>4<u>--------------------------------------</u>|
+A|<u>------------------------------------------</u>|
+E|<u>-</u>0<u>----------------------------------------</u>|
+</span></span>
+
+<span class="tablatura">
+   <b class="_i67">Am9</b>          <b class="_i68">C/D</b>       <b class="_i69">Dm7</b>          <b class="_i70">F/G</b>
+<span class="cnt">E|<u>-------</u>0<u>------</u>0<u>--</u>0<u>------</u>1<u>------</u>1<u>----------</u>|
+B|<u>-----</u>1<u>---</u>1<u>----</u>1<u>----</u>1<u>----</u>1<u>----</u>1<u>---</u>1<u>---</u>1<u>----</u>|
+G|<u>---</u>4<u>-------</u>4<u>--</u>0<u>------</u>0<u>--</u>2<u>--</u>2<u>-------</u>2<u>-</u>2<u>---</u>2|
+D|<u>--------------</u>0<u>---------</u>0<u>------------</u>3<u>-</u>3<u>--</u>|
+A|<u>-</u>0<u>----------------------------------------</u>|
+E|<u>-------------------------------------</u>3<u>----</u>|
+</span></span>
+
+<span class="tablatura">
+   <b class="_i71">G</b>
+<span class="cnt">E|<u>------------------------------------------</u>|
+B|<u>-</u>3<u>----------------------------------------</u>|
+G|<u>-</u>4<u>---</u>4<u>------------------------------------</u>|
+D|<u>-</u>5<u>-</u>5<u>--------------------------------------</u>|
+A|<u>------------------------------------------</u>|
+E|<u>------------------------------------------</u>|
+</span></span>
+
+<span class="tablatura">
+   <b class="_i72">C7M</b>           <b class="_i73">B</b>          <b class="_i74">Em</b>      <b class="_i75">D5(9)</b>
+<span class="cnt">E|<u>-</u>0<u>-----</u>0<u>-----</u>0<u>-</u>2<u>-----</u>2<u>--------------------</u>|
+B|<u>-</u>0<u>-----</u>0<u>-----</u>0<u>-</u>4<u>-----</u>4<u>--------</u>0<u>-------</u>3<u>---</u>|
+G|<u>---</u>0<u>-----</u>0<u>---------</u>4<u>----</u>4<u>---</u>0<u>---</u>0<u>---</u>2<u>---</u>2<u>-</u>|
+D|<u>-----------------</u>4<u>----</u>4<u>-----------</u>0<u>-------</u>|
+A|<u>-</u>3<u>---</u>3<u>-----</u>3<u>---</u>2<u>--------------------------</u>|
+E|<u>--------------------------</u>0<u>---------------</u>|
+</span></span>
+
+<span class="tablatura">
+   <b class="_i76">A5(9)/C#</b>
+<span class="cnt">E|<u>-</u>0<u>-----</u>0<u>----------------------------------</u>|
+B|<u>-</u>0<u>---</u>0<u>------------------------------------</u>|
+G|<u>-</u>2<u>-</u>2<u>--------------------------------------</u>|
+D|<u>------------------------------------------</u>|
+A|<u>-</u>4<u>----------------------------------------</u>|
+E|<u>------------------------------------------</u>|
+</span></span>
+
+<span class="tablatura">
+       <b class="_i77">Am9</b>             <b class="_i78">C/D</b>
+<span class="cnt">E|<u>---</u>0<u>-------</u>0<u>---------</u>0<u>-------</u>0<u>------------</u>|
+B|<u>---------</u>1<u>---</u>1<u>-------</u>1<u>--</u>1<u>------</u>1<u>----------</u>|
+G|<u>-</u>2<u>-----</u>4<u>-------</u>4<u>-----</u>0<u>----</u>0<u>------</u>0<u>--------</u>|
+D|<u>---------------------</u>0<u>--------------------</u>|
+A|<u>-----</u>0<u>-----------</u>0<u>------------------------</u>|
+E|<u>------------------------------------------</u>|
+</span></span>
+Refrão:
+<b class="_i79">G7M</b>           <b class="_i80">Em7(9)</b>             <b class="_i81">C9</b>
+    Estou clamando,  estou pedindo
+ <b class="_i82">G6/B</b>           <b class="_i83">Am7</b>       <b class="_i84">C/D</b>    <b class="_i85">G7M</b>
+Só Deus sabe a dor que estou sentindo
+         <b class="_i86">Em7(9)</b>      <b class="_i87">C9</b>
+Meu coração  está ferido
+ <b class="_i88">G6/B</b>         <b class="_i89">Am7</b>   <b class="_i90">C/D</b>   <b class="_i91">G7M</b>
+Mas o meu clamor está  subindo
+
+Dedilhado - Refrão:
+<span class="tablatura">
+   <b class="_i92">G7M</b>              <b class="_i93">Em7(9)</b>
+<span class="cnt">E|<u>------------------------------------------</u>|
+B|<u>-------</u>3<u>----------------</u>3<u>-----------------</u>|
+G|<u>-----</u>0<u>-------</u>0<u>--------</u>0<u>-------</u>0<u>-----------</u>|
+D|<u>---</u>4<u>-------</u>4<u>---</u>4<u>----</u>4<u>-------</u>4<u>---</u>4<u>---------</u>|
+A|<u>------------------------------------------</u>|
+E|<u>-</u>3<u>-------</u>3<u>--------</u>0<u>-------</u>0<u>---------------</u>|
+</span></span>
+
+<span class="tablatura">
+   <b class="_i94">C9</b>       <b class="_i95">G6/B</b>   <b class="_i96">Am7</b>       <b class="_i97">C/D</b>
+<span class="cnt">E|<u>---</u>0<u>-----------------</u>0<u>---------</u>0<u>----------</u>|
+B|<u>-</u>3<u>---</u>3<u>-------</u>3<u>---------</u>1<u>---------</u>1<u>--------</u>|
+G|<u>-------</u>0<u>---</u>0<u>---</u>0<u>---</u>0<u>---------</u>0<u>------------</u>|
+D|<u>---------------------------</u>0<u>--------------</u>|
+A|<u>-</u>3<u>--------</u>2<u>------</u>0<u>------------------------</u>|
+E|<u>------------------------------------------</u>|
+</span></span>
+(Intro - Com variação na terceira parte)
+<span class="tablatura">
+   <b class="_i98">G/B</b>                   <b class="_i99">G</b>
+<span class="cnt">E|<u>---------------------------</u>3<u>-</u>2<u>------------</u>|
+B|<u>-</u>3<u>-----------------------</u>3<u>---</u>3<u>-</u>5<u>--</u>3<u>-----</u>3<u>-</u>|
+G|<u>---</u>0<u>-</u>0<u>---</u>0<u>-----</u>2/4\2<u>-</u>0<u>-</u>0<u>-------</u>5<u>--</u>4<u>---</u>0<u>---</u>|
+D|<u>------------------------------------</u>0<u>-----</u>|
+A|<u>-</u>2<u>---</u>3<u>-</u>3<u>---</u>3<u>------------------------------</u>|
+E|<u>-----------------------</u>3<u>-----</u>3<u>----</u>3<u>-------</u>|
+</span></span>
+
+<span class="tablatura">
+   <b class="_i100">Am7</b> <b class="_i101">G/B</b>
+<span class="cnt">E|<u>------------------------------------------</u>|
+B|<u>-</u>1<u>---</u>3<u>------------------------------------</u>|
+G|<u>-</u>0<u>---</u>0<u>------------------------------------</u>|
+D|<u>------------------------------------------</u>|
+A|<u>-</u>0<u>---</u>2<u>------------------------------------</u>|
+E|<u>------------------------------------------</u>|
+</span></span>
+<b class="_i102">C7M</b>               <b class="_i103">B</b>
+Todas as coisa cooperam pra o bem
+    <b class="_i104">Em</b>       <b class="_i105">D5(9)</b>   <b class="_i106">A5(9)/C#</b>
+Daqueles que amam a ti
+          <b class="_i107">Am9</b>    <b class="_i108">C/D</b>
+Espírito Santo, vem orar por mim
+
+(Refrão)
+
+Final:
+   <b class="_i109">G</b>                  <b class="_i110">C/D</b>    <b class="_i111">G</b>
+E|---------------0----0---------------------|
+B|-0-------0-1-3---3--1------0--------------|
+G|-----0--------------0--0h2----------------|
+D|---0---0----------------------------------|
+A|-----------0-2-3--------------------------|
+E|-3-------3-----------------3--------------|</pre>
+
+
+
+
+
+
+
+
+  
+                  <pre id="ct_cifra" class="cifra-mono">Intro 4x: <b >Dm7</b>  <b >Bb9(11+)</b>
+
+<span >
+   <b >Dm7</b>                  <b >Bb9(11+)</b>
+<span >E|<u>-----------------------------------------</u>
+B|<u>------------</u>5<u>---</u>6<u>-----</u>6<u>----</u>X<u>-------------</u>
+G|<u>-------</u>5<u>----</u>5<u>---</u>5<u>-----</u>5<u>----</u>X<u>-------------</u>
+D|<u>-----</u>7<u>----</u>7<u>---</u>7<u>-----</u>0<u>-</u>0<u>----</u>X<u>-------------</u>
+A|<u>-</u>3/5<u>-----------------------</u>X<u>-------------</u>
+E|<u>----------------------</u>6<u>----</u>X<u>-------------</u>
+</span></span>
+
+(Primeira Parte)
+ <b >Dm7</b>     <b >Bb9(11+)</b>  <b >Dm7</b>    <b >Bb9(11+)</b>
+<div class='first_line'>Deus meu          Pai meu</div>
+  <b >Dm7</b>    <b >Bb9(11+)</b>  <b >Dm7</b>     <b >Bb9(11+)</b>
+Amor meu          Tudo, razão de tudo
+
+ <b >Dm7</b>     <b >Bb9(11+)</b>  <b >Dm7</b>    <b >Bb9(11+)</b>
+Deus meu           Ar    Meu
+
+   <b >Dm7</b>     <b >Bb9(11+)</b>    <b >Dm7</b>
+Farol O farol que eu preciso
+
+        <b >Bb9(11+)</b>
+Como eu          preciso...
+
+Primeira Parte:
+<span >
+   <b >C/D</b>    <b >Dm7</b>            <b >Bb9(11+)</b>
+<span >E|<u>--------------------</u>X<u>--------------------</u>
+B|<u>-</u>5/6<u>--</u>5/6<u>-</u>X<u>---</u>6<u>--</u>5<u>--</u>X<u>--</u>6<u>-----------------</u>
+G|<u>-</u>5<u>----</u>5<u>---</u>X<u>---</u>5<u>--</u>5<u>--</u>X<u>--</u>5<u>-----------------</u>
+D|<u>-</u>5/7<u>--</u>5/7<u>-</u>X<u>---</u>7<u>--</u>5<u>--</u>X<u>--</u>0<u>-----------------</u>
+A|<u>-</u>5<u>----</u>5<u>---</u>X<u>-</u>0<u>-</u>5<u>-----</u>X<u>--------------------</u>
+E|<u>-----------------</u>8<u>-----</u>6<u>-----------------</u>
+</span></span>
+
+Segunda Parte:
+       <b >Dm7</b>                 <b >G</b>
+Eu preciso Te sentir todo dia
+     <b >Dm7</b>                     <b >G</b>
+E olhar pra Tua luz pra não me perder
+     <b >Dm7</b>                       <b >G</b>
+Meu Senhor, Tu és a minha alegria
+       <b >Bb9(11+)</b>
+Eu preciso...
+
+Parte 1 de 3
+<span >
+   <b >C/D</b> <b >Dm7</b>  <b >C/D</b>    <b >Dm7</b> <b >C/D</b>
+<span >E|<u>--------</u>5<u>--------</u>5<u>----------------------</u>
+B|<u>-</u>5/<u>--</u>6<u>--</u>6<u>-</u>5<u>--</u>X<u>-</u>X<u>-</u>6<u>---</u>5<u>--</u>X<u>-</u>X<u>-------------</u>
+G|<u>-</u>5<u>------</u>5<u>-</u>5<u>--</u>X<u>-</u>X<u>-</u>5<u>---</u>5<u>--</u>X<u>-</u>X<u>-------------</u>
+D|<u>-</u>5/<u>--</u>7<u>--</u>7<u>-</u>5<u>--</u>X<u>-</u>X<u>-</u>7<u>---</u>5<u>--</u>X<u>-</u>X<u>-------------</u>
+A|<u>-</u>5<u>------</u>5<u>-</u>5<u>--</u>X<u>-</u>X<u>-</u>5<u>---</u>5<u>--</u>X<u>-</u>X<u>-------------</u>
+E|<u>----------------------------------------</u>
+</span></span>
+ ↓      ↓ ↓  ↓ ↑ ↓   ↓  ↓ ↑
+</pre>
+
+
+</div>
+
+
+
+
+<div class="test"></div>
+<pre id="stand"></pre>
+
+<div class="back"></div>
+<script >
+// $(".test").load("index.html");
+
+var songs = new Array();
+$('.first_line').each(function(i){
+  songs[i] = {}
+  songs[i]['html'] = $(this).html();
+  songs[i]['id'] = i;
+});
+
+
+songs.reverse();
+$.each( songs, function( key, value ) {
+  $('#list').append('<div class="cifra" id=' + value['id'] + '>' + value['html'] + '</div><br />');
+});
+
+
+$('.cifra').click(function(){
+  $('#stand').html($('.cifra-mono').eq(this.id).html());
+  $('#list').css('display','none');
+  $(".back").css('display','block');
+
+  // console.log($('.cifra-mono').eq(this.id).html());
+});
+
+$( ".back" ).click(function() {
+  $('#stand').html('');
+  $('#list').css('display','block');
+  $(".back").css('display','none');
+});
+
+</script>
+
