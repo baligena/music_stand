@@ -46,11 +46,16 @@ $.get( "includes/cifras.html", function( data ) {
             var songs = new Array();
             $('.first_line').each(function(i){
                 songs[i] = {}
-                songs[i]['html'] = $(this).html();
+                songs[i]['html'] = $(this).html().trim();
                 songs[i]['id'] = i;
             });
 
-            songs.reverse();
+            // sort songs by first line
+            songs.sort(function(a, b) {
+                if(a.html < b.html) return -1;
+                if(a.html > b.html) return 1;
+                return 0;
+            });
             $.each( songs, function( key, value ) {
                 $('#list').append('<div class="cifra" id=' + value['id'] + '>' + value['html'] + '</div><br />');
             });
