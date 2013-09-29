@@ -41,10 +41,14 @@ b[class*='_i'], .chords {
 
 
 <script >
-
-$.get( "includes/cifras.html", function( data ) {
+//NAVIGATION PAGE
+filename = "includes/cifras.html";
+var cifras = $.get( filename, function( data ) {
     $( "#songs" ).html( data );
-}).done( function(){
+});
+
+//Load links to songs
+cifras.done( function(){
             var songs = new Array();
             $('.first_line').each(function(i){
                 songs[i] = {}
@@ -69,11 +73,20 @@ $.get( "includes/cifras.html", function( data ) {
             });
 });
 
+//Error checking
+cifras.done( function(){
+    if($('.cifra-mono').length != $('.first_line').length){
+        alert('Error: number of .first_line doesn\'t equal the number of .cifra-mono \nMeaning there\'s songs that will not show up in the Navigation Page \nCheck  ' +filename )
+    }
+});
+
 
 $( ".back" ).click(function() {
     $('#stand').html(''); 
     $('#list').css('display','block');
     $(".back").css('display','none');
 });
+//END of NAVIGATION
+
 </script>
 
