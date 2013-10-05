@@ -15,8 +15,9 @@
 .cifra-mono{
   display: none;
 }
+
+
 .cifra, .back {
-  border: 1px solid;
   padding: 20px;
   background: lightblue;
   display: block;
@@ -25,20 +26,28 @@
 }
 
 .back {
+  background: black;
+  color: white;
+  position: fixed;
+  left:0;
+  width: 100%;
+  bottom: 0;
+}
+.back {
   display: none;
 }
+
 b[class*='_i'], .chords {
   color:red 
 }
 
-
 </style>
+<body>
 <div id="list"></div>
-<div class="back">Back</div>
 <div id="songs"></div>
 <pre id="stand"></pre>
 <div class="back">Back</div>
-
+</body>
 
 <script >
 //NAVIGATION PAGE
@@ -67,7 +76,9 @@ load_cifras.done( function(){
             });
             
             $('.cifra').click(function(){
-                $('#stand').html($('.cifra-mono').eq(this.id).html());
+                $('#stand').html($('.cifra-mono').eq(this.id).html())//show stand page
+                           .css('padding-bottom', '90px');  //give space for bottom Navigation bar
+                $('body').animate({ scrollTop: 0 }, 0); //scroll to the top of page
                 $('#list').css('display','none');
                 $(".back").css('display','block');
             });
@@ -80,13 +91,14 @@ load_cifras.done( function(){
     }
 });
 
-
 $( ".back" ).click(function() {
-    $('#stand').html(''); 
+    $('#stand').html('').css('padding-bottom', '0px'); 
     $('#list').css('display','block');
     $(".back").css('display','none');
+
 });
 //END of NAVIGATION
 
 </script>
 
+improved the navigation, removed to back button and make the bottom fixed.  When the song is click it scrolls to the top,  added 2 songs
