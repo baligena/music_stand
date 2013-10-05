@@ -58,10 +58,13 @@ var load_cifras = $.get( filename, function( data ) {
 
 //Load links to songs
 load_cifras.done( function(){
+            length = 50;
             var songs = new Array();
+            var s;
             $('.first_line').each(function(i){
+                s = $(this).html().trim().substr(0,50);
                 songs[i] = {}
-                songs[i]['html'] = $(this).html().trim();
+                songs[i]['html'] = ($(this).html().length > length) ? s + '...' : s;
                 songs[i]['id'] = i;
             });
 
@@ -100,5 +103,3 @@ $( ".back" ).click(function() {
 //END of NAVIGATION
 
 </script>
-
-improved the navigation, removed to back button and make the bottom fixed.  When the song is click it scrolls to the top,  added 2 songs
