@@ -8,15 +8,9 @@
 </script>
 
 <style>
-#list{
-	/*background: pink;*/
-	/*height: 50px;*/
-}
 .cifra-mono{
   display: none;
 }
-
-
 .cifra, .back {
   padding: 20px;
   background: lightblue;
@@ -24,9 +18,12 @@
   font-weight: bold;
   font-size: 25px;
 }
+.cifra{
+  border: 1px solid #93B9C5;
+}
 
 .back {
-  background: black;
+  background: rgb(0, 26, 3);
   color: white;
   position: fixed;
   left:0;
@@ -58,13 +55,13 @@ var load_cifras = $.get( filename, function( data ) {
 
 //Load links to songs
 load_cifras.done( function(){
-            length = 50;
+            fl_length = 50;
             var songs = new Array();
             var s;
             $('.first_line').each(function(i){
                 s = $(this).html().trim().substr(0,50);
                 songs[i] = {}
-                songs[i]['html'] = ($(this).html().length > length) ? s + '...' : s;
+                songs[i]['html'] = ($(this).html().length > fl_length) ? s + '...' : s;
                 songs[i]['id'] = i;
             });
 
@@ -81,8 +78,8 @@ load_cifras.done( function(){
             $('.cifra').click(function(){
                 $('#stand').html($('.cifra-mono').eq(this.id).html())//show stand page
                            .css('padding-bottom', '90px');  //give space for bottom Navigation bar
-                $('body').animate({ scrollTop: 0 }, 0); //scroll to the top of page
                 $('#list').css('display','none');
+                $('body').animate({ scrollTop: 0 }, 0); //scroll to the top of page
                 $(".back").css('display','block');
             });
 });
