@@ -20,6 +20,7 @@
 }
 .cifra{
   border: 1px solid #93B9C5;
+  margin-bottom: 20px;
 }
 
 .back {
@@ -72,7 +73,7 @@ load_cifras.done( function(){
                 return 0;
             });
             $.each( songs, function( key, value ) {
-                $('#list').append('<div class="cifra" id=' + value['id'] + '>' + value['html'] + '</div><br />');
+                $('#list').append('<li class="cifra" id=' + value['id'] + '>' + value['html'] + '</li>');
             });
             
             $('.cifra').click(function(){
