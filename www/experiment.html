@@ -2,6 +2,9 @@
 <script src="http://underscorejs.org/underscore-min.js"></script>
 <script src="http://backbonejs.org/backbone-min.js"></script>
 
+<script src="http://ejohn.org/files/htmlparser.js"></script>
+<script src="js/html2json.js"></script>
+
 <style>
 .cifra-mono{
   display: none;
@@ -33,9 +36,71 @@ b[class*='_i'], .chords {
 </style>
 
 <body>
+	
 </body>
-
 <script>
+filename = "includes/cifras.html";
+var load_cifras = $.get( filename, function( data ) {
+	$('body').append(data);
+    // $( "#songs" ).html( data );
+    // console.log(html2json('<li>hello<div class="first_line">asdf</div>asdf</li>') );
+    fl_length = 50;
+    var songs = new Array();
+    var s;
+    $('pre').each(function(i){
+    	// console.log($(this).html());
+        s = $('.first_line',this).html().trim().substr(0,50);
+        songs[i] = {
+	        			id: i,
+	        			first_line: ($('.first_line',this).html().length > fl_length) ? s + '...' : s,
+	        			html: $(this).html()
+					}
+        
+        // songs[i]['first_line'] = ($('.first_line',this).html().length > fl_length) ? s + '...' : s;
+        // songs[i]['html'] = $(this).html();
+        // songs[i]['id'] = i;
+    });
+    if($('.cifra-mono').length != $('.first_line').length){
+        alert('Error: number of .first_line doesn\'t equal the number of .cifra-mono \nMeaning there\'s songs that will not show up in the Navigation Page \nCheck  ' +filename )
+    }
+    // $('pre').each(function(i){
+    // 	// console.log($('.first_line',this).html());
+    //     s = $(this).html().trim().substr(0,50);
+    //     songs[i] = {}
+    //     // songs[i]['html'] = $(this).html();
+    //     songs[i]['first_line'] = ($('.first_line',this).html().length > fl_length) ? s + '...' : s;
+    //     songs[i]['id'] = i;
+    // });
+
+
+    // sort songs by first line
+    songs.sort(function(a, b) {
+        if(a.first_line < b.first_line) return -1;
+        if(a.first_line > b.first_line) return 1;
+        return 0;
+    });
+
+    var cifras = new Array();
+    $.each( songs, function( key, value ) {
+    	cifras.push({
+    				id:value['id'], 
+    				first_line:value['first_line'],
+    				html: value['html']
+    			});
+        // $('#list').append('<li class="cifra" id=' + value['id'] + '>' + value['html'] + '</li>');
+    });
+    console.log(cifras);
+
+    
+    // $('.cifra').click(function(){
+    //     $('#stand').html($('.cifra-mono').eq(this.id).html())//show stand page
+    //                .css('padding-bottom', '90px');  //give space for bottom Navigation bar
+    //     $('#list').css('display','none');
+    //     $('body').animate({ scrollTop: 0 }, 0); //scroll to the top of page
+    //     $(".back").css('display','block');
+    // });
+    window.JSON = cifras;
+});
 
 
 
@@ -47,11 +112,14 @@ window.app = {
 	,cifra: {}
 	,view:{}
 }
+load_cifras.done(function(){
 
-JSON =	[
-			{name: "Cifra 1", artist: "OMC" },
-			{name: "Cifra 2", artist: "OMasdfC" },
-		];
+});
+// setTimeout(code,millisec,lang)
+// JSON =	[
+// 			{first_line: "Cifra 1", artist: "OMC" },
+// 			{first_line: "Cifra 2", artist: "OMasdfC" },
+// 		];
 
 // var Song = Backbone.Model.extend({
 // 	   defaults:{
@@ -64,9 +132,13 @@ var Album = Backbone.Collection.extend({
     // model: Song
 });
 
-var cifras = new Album(JSON);
+load_cifras.done(function(){
 
-var page = Backbone.View.extend({
+
+
+window.cifras = new Album(JSON);
+
+window.page = Backbone.View.extend({
 	//DEFAULTS
 	el: 'body'
 	,name: 'SET page NAME, CURRENTLY COMING FROM PARENT'
@@ -88,7 +160,7 @@ var page = Backbone.View.extend({
 	}
 });
 
-var home_page = page.extend({
+window.home_page = page.extend({
 	name: 'home' 
 	,events:{
 		'click .cifra': 'change_page'
@@ -102,7 +174,7 @@ var home_page = page.extend({
 		var that = this;
 		var i = 1;
 		this.collection.each(function(model){
-			that.$el.append('<li class="cifra" id=' + i + '>' + model.get('name') + '</li>');
+			that.$el.append('<li class="cifra" id=' + i + '>' + model.get('first_line') + '</li>');
 			i++;
 		});
 		// this.$el.append('<li><a href="#/cifra/deus_me_ama">Deuse Me AMa</a></li>');
@@ -113,13 +185,13 @@ var home_page = page.extend({
 	}
 });
 
-var cifra_page = page.extend({
+window.cifra_page = page.extend({
 	name: 'cifra'
 	,events:{
 		'click .controls': 'back',
 	}
 	,render: function(){
-		this.$el.append('<p>'+this.collection.at(app.cifra.id).get('name')+'</p>');
+		this.$el.append('<p>'+this.collection.at(app.cifra.id).get('first_line')+'</p>');
 		this.draw_controls();
 		return this;
 	}
@@ -127,22 +199,17 @@ var cifra_page = page.extend({
 		this.$el.append('<li class="controls">Back</li>');
 	}
 	,back:function(){
-		console.log('back button');
-		
-		// this.remove();
 		if(app.previous_page){
 			app.router.navigate('', {trigger: true});
 		}
 		else{
 			console.log('Custom Error: no previous_page');
 		}
-		//if previous_page is set
-		// app.router.navigate('cifra/'+app.cifra.id, {trigger: true});
 	}
 });
 
 
-var router = Backbone.Router.extend({
+window.router = Backbone.Router.extend({
 	routes:{
 		// "route", "fuction name",
 		"": "draw_home",
@@ -178,11 +245,8 @@ app.router = new router;
 $(function(){
 	Backbone.history.start();
 })
+});
 
-	// this.$el.append(function(id){
-
-	// 		return '<p>'+cifras.at(id).get('name')+'</p>'
-	// 	});
 
 
 // var Pannel = Backbone.View.extend({
