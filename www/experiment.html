@@ -1,0 +1,213 @@
+<script src="js/jquery-2.0.2.min.js"></script>
+<script src="http://underscorejs.org/underscore-min.js"></script>
+<script src="http://backbonejs.org/backbone-min.js"></script>
+
+<style>
+.cifra-mono{
+  display: none;
+}
+.cifra, .controls {
+  padding: 20px;
+  background: lightblue;
+  display: block;
+  font-weight: bold;
+  font-size: 25px;
+}
+.cifra{
+  border: 1px solid #93B9C5;
+  margin-bottom: 20px;
+}
+
+.controls {
+  background: rgb(0, 26, 3);
+  color: white;
+  position: fixed;
+  left:0;
+  width: 100%;
+  bottom: 0;
+}
+
+b[class*='_i'], .chords {
+  color:red 
+}
+</style>
+
+<body>
+</body>
+
+<script>
+
+
+
+window.app = {
+	page: ''
+	,previous_page:''
+	,url:''
+	,file:''
+	,cifra: {}
+	,view:{}
+}
+
+JSON =	[
+			{name: "Cifra 1", artist: "OMC" },
+			{name: "Cifra 2", artist: "OMasdfC" },
+		];
+
+// var Song = Backbone.Model.extend({
+// 	   defaults:{
+// 	   name: "Not specified",
+//     artist: "Not specified"
+// 	   },
+// })
+//Data
+var Album = Backbone.Collection.extend({
+    // model: Song
+});
+
+var cifras = new Album(JSON);
+
+var page = Backbone.View.extend({
+	//DEFAULTS
+	el: 'body'
+	,name: 'SET page NAME, CURRENTLY COMING FROM PARENT'
+	,initialize:function(){
+		this.clear_page();
+		app.previous_page = app.page;
+		app.page = this;
+		app.url = document.URL;
+		app.file = location.pathname;
+		app.routing = location.hash;
+		_.bindAll(this, 'render');
+		this.render();
+	}
+	,clear_page:function(){
+		var deferred = new $.Deferred();
+		this.$el.html('');
+		deferred.resolve();
+		return deferred;
+	}
+});
+
+var home_page = page.extend({
+	name: 'home' 
+	,events:{
+		'click .cifra': 'change_page'
+	}
+	,render: function(){
+		this.page = this;
+		this.draw_list();
+		return this;
+	}
+	,draw_list:function(){
+		var that = this;
+		var i = 1;
+		this.collection.each(function(model){
+			that.$el.append('<li class="cifra" id=' + i + '>' + model.get('name') + '</li>');
+			i++;
+		});
+		// this.$el.append('<li><a href="#/cifra/deus_me_ama">Deuse Me AMa</a></li>');
+	}
+	,change_page:function(name){
+		app.cifra.id = name.target.id-1;
+		app.router.navigate('cifra/'+app.cifra.id, {trigger: true});
+	}
+});
+
+var cifra_page = page.extend({
+	name: 'cifra'
+	,events:{
+		'click .controls': 'back',
+	}
+	,render: function(){
+		this.$el.append('<p>'+this.collection.at(app.cifra.id).get('name')+'</p>');
+		this.draw_controls();
+		return this;
+	}
+	,draw_controls:function(){
+		this.$el.append('<li class="controls">Back</li>');
+	}
+	,back:function(){
+		console.log('back button');
+		
+		// this.remove();
+		if(app.previous_page){
+			app.router.navigate('', {trigger: true});
+		}
+		else{
+			console.log('Custom Error: no previous_page');
+		}
+		//if previous_page is set
+		// app.router.navigate('cifra/'+app.cifra.id, {trigger: true});
+	}
+});
+
+
+var router = Backbone.Router.extend({
+	routes:{
+		// "route", "fuction name",
+		"": "draw_home",
+		"cifra/:id": "draw_cifra", //eg: URL/#/cifra/12
+	}	
+	,draw_home:function(){
+		this.initiate('home_page');
+	}
+	,draw_cifra: function(id){
+		if(app.cifra['id'] == undefined){
+			app.router.navigate('', {trigger: true});
+			console.log('Custom Warning: app.cifra.id was not set.  May be because you arrived at the previous route incorrectly, therefore the page was redirected.\nFile: '+ app.file+'\nRoute:"'+app.routing+'"');
+			return;
+		}
+		this.initiate('cifra_page');
+	}
+	,initiate:function(view){
+		page = app.view[view];
+		if(!page){	//exist?
+			app.view[view] = eval('new '+ view + '({collection: cifras})');
+		}
+		else{
+			page.clear_page().done(function(){
+				page.render();
+			});
+		}
+	}
+
+});
+app.router = new router;
+
+
+$(function(){
+	Backbone.history.start();
+})
+
+	// this.$el.append(function(id){
+
+	// 		return '<p>'+cifras.at(id).get('name')+'</p>'
+	// 	});
+
+
+// var Pannel = Backbone.View.extend({
+// 	initialize: function(){
+// 	}
+//    ,test: function(){
+// 	}
+// });
+// var balls = Pannel.extend({
+// 	el: $("#test"),
+// 	events:{
+// 		"click": "alert",
+// 	},
+// 	initialize: function(options){
+//       this.foo = 'bar';
+//    	},
+// 	alert: function(){
+// 		alert(123);
+// 	},
+// });
+
+// new Pannel();
+
+// var kaka = new balls;
+// kaka.test()
+</script>
+
+
