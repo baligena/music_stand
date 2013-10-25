@@ -1,17 +1,13 @@
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <script src="js/jquery-2.0.2.min.js"></script>
+<script src="js/underscore-min.js"></script>
+<script src="js/backbone-min.js"></script>
 
-<script>
-//utitity
-//
-
-</script>
 
 <style>
 .cifra-mono{
   display: none;
 }
-.cifra, .back {
+.cifra, .controls {
   padding: 20px;
   background: lightblue;
   display: block;
@@ -23,7 +19,7 @@
   margin-bottom: 20px;
 }
 
-.back {
+.controls {
   background: rgb(0, 26, 3);
   color: white;
   position: fixed;
@@ -31,73 +27,187 @@
   width: 100%;
   bottom: 0;
 }
-.back {
-  display: none;
-}
 
 b[class*='_i'], .chords {
   color:red 
 }
-
 </style>
-<body>
-<div id="list"></div>
-<div id="songs"></div>
-<pre id="stand"></pre>
-<div class="back">Back</div>
-</body>
 
-<script >
-//NAVIGATION PAGE
+<body></body>
+<script>
+//http://jsfiddle.net/4vTvW/3/
 filename = "includes/cifras.html";
 var load_cifras = $.get( filename, function( data ) {
-    $( "#songs" ).html( data );
-});
-
-//Load links to songs
-load_cifras.done( function(){
-            fl_length = 50;
-            var songs = new Array();
-            var s;
-            $('.first_line').each(function(i){
-                s = $(this).html().trim().substr(0,50);
-                songs[i] = {}
-                songs[i]['html'] = ($(this).html().length > fl_length) ? s + '...' : s;
-                songs[i]['id'] = i;
-            });
-
-            // sort songs by first line
-            songs.sort(function(a, b) {
-                if(a.html < b.html) return -1;
-                if(a.html > b.html) return 1;
-                return 0;
-            });
-            $.each( songs, function( key, value ) {
-                $('#list').append('<li class="cifra" id=' + value['id'] + '>' + value['html'] + '</li>');
-            });
-            
-            $('.cifra').click(function(){
-                $('#stand').html($('.cifra-mono').eq(this.id).html())//show stand page
-                           .css('padding-bottom', '90px');  //give space for bottom Navigation bar
-                $('#list').css('display','none');
-                $('body').animate({ scrollTop: 0 }, 0); //scroll to the top of page
-                $(".back").css('display','block');
-            });
-});
-
-//Error checking
-load_cifras.done( function(){
+  $('body').append(data);
+    fl_length = 50;
+    var songs = new Array();
+    var s;
+    $('pre').each(function(i){
+        s = $('.first_line',this).html().trim().substr(0,50);
+        songs[i] = {
+                id: i,
+                first_line: ($('.first_line',this).html().length > fl_length) ? s + '...' : s,
+                html: $(this).html()
+          }
+    });
     if($('.cifra-mono').length != $('.first_line').length){
         alert('Error: number of .first_line doesn\'t equal the number of .cifra-mono \nMeaning there\'s songs that will not show up in the Navigation Page \nCheck  ' +filename )
     }
+    // sort songs by first line
+    songs.sort(function(a, b) {
+        if(a.first_line < b.first_line) return -1;
+        if(a.first_line > b.first_line) return 1;
+        return 0;
+    });
+
+    var cifras = new Array();
+    $.each( songs, function( key, value ) {
+      cifras.push({
+            id:value['id'], 
+            first_line:value['first_line'],
+            html: value['html']
+          });
+    });
+    app.data.JSON = cifras;
 });
 
-$( ".back" ).click(function() {
-    $('#stand').html('').css('padding-bottom', '0px'); 
-    $('#list').css('display','block');
-    $(".back").css('display','none');
 
+
+window.app = {
+  current_page: ''
+  ,previous_page:''
+  ,url:''
+  ,file:''
+  ,cifra: {}
+  ,view:{}
+  ,pages:{}
+  ,collection:{}
+  ,router:{}
+  ,data:{}
+}
+
+load_cifras.done(function(){
+
+  app.view.page = Backbone.View.extend({
+    //DEFAULTS
+    el: 'body'
+    ,name: 'SET page NAME, CURRENTLY COMING FROM PARENT'
+    ,initialize:function(){
+      this.clear_page();
+      app.previous_page = app.current_page;
+      app.current_page = this;
+      app.url = document.URL;
+      app.file = location.pathname;
+      app.routing = location.hash;
+      _.bindAll(this, 'render');
+      this.render();
+    }
+    ,clear_page:function(){
+      var deferred = new $.Deferred();
+      this.$el.html('');
+      deferred.resolve();
+      return deferred;
+    }
+  });
+
+  app.view.home_page = app.view.page.extend({
+    name: 'home' 
+    ,events:{
+      'click .cifra': 'change_page'
+    }
+    ,render: function(){
+      this.draw_list();
+      return this;
+    }
+    ,draw_list:function(){
+      var that = this;
+      var i = 1;
+      this.collection.each(function(model){
+        that.$el.append('<li class="cifra" id=' + i + '>' + model.get('first_line') + '</li>');
+        i++;
+      });
+    }
+    ,change_page:function(ev){
+      app.cifra.id = ev.target.id-1;
+      app.route.navigate('cifra/'+app.cifra.id, {trigger: true});
+    }
+  });
+
+  app.view.cifra_page = app.view.page.extend({
+    name: 'cifra'
+    ,events:{
+      'click .controls': 'back',
+    }
+    ,render: function(){
+      this.$el.animate({ scrollTop: 0 }, 0); //scroll to the top of page
+          this.add_css();
+      this.$el.append('<pre>'+this.collection.at(app.cifra.id).get('html')+'</pre>');
+      this.draw_controls();
+      return this;
+    }
+    ,draw_controls:function(){
+      this.$el.append('<li class="controls">Back</li>');
+    }
+    ,back:function(ev){
+      if(app.previous_page){
+        app.route.navigate('', {trigger: true});
+        this.remove_css();
+      }
+      else{
+        console.log('Custom Error: no previous_page');
+      }
+    }
+    ,add_css:function(){
+      this.$el.css('padding-bottom', '90px');
+    }
+    ,remove_css:function(){
+      this.$el.css('padding-bottom', '0px');
+    }
+
+  });
+
+  app.collection.cifras = Backbone.Collection.extend({
+      // model: Song
+  });
+
+  app.router.music_stand = Backbone.Router.extend({
+    routes:{
+      // "route", "fuction name",
+      "": "draw_home",
+      "cifra/:id": "draw_cifra", //eg: URL/#/cifra/12
+    } 
+    ,draw_home:function(){
+      this.initiate('home_page');
+    }
+    ,draw_cifra: function(id){
+      if(app.cifra['id'] == undefined){
+        app.router.navigate('', {trigger: true});
+        console.log('Custom Warning: app.cifra.id was not set.  May be because you arrived at the previous route incorrectly, therefore the page was redirected.\nFile: '+ app.file+'\nRoute:"'+app.routing+'"');
+        return;
+      }
+      this.initiate('cifra_page');
+    }
+    ,initiate:function(view){
+      page = app.pages[view];
+      if(!page){  //exist?
+        app.pages[view] = eval('new app.view.'+ view + '({collection: new app.collection.cifras(app.data.JSON)})');
+      }
+      else{
+        page.clear_page().done(function(){
+          page.render();
+        });
+      }
+    }
+
+  });
+  app.route = new app.router.music_stand;
+
+
+  $(function(){
+    Backbone.history.start();
+  })
 });
-//END of NAVIGATION
 
 </script>
+
+

@@ -1,6 +1,6 @@
 <script src="js/jquery-2.0.2.min.js"></script>
-<script src="http://underscorejs.org/underscore-min.js"></script>
-<script src="http://backbonejs.org/backbone-min.js"></script>
+<script src="js/underscore-min.js"></script>
+<script src="js/backbone-min.js"></script>
 
 
 <style>
@@ -33,11 +33,10 @@ b[class*='_i'], .chords {
 }
 </style>
 
-<body>
-	
-</body>
+<body></body>
 <script>
 //http://jsfiddle.net/4vTvW/3/
+
 filename = "includes/cifras.html";
 var load_cifras = $.get( filename, function( data ) {
 	$('body').append(data);
@@ -72,7 +71,6 @@ var load_cifras = $.get( filename, function( data ) {
     });
     app.data.JSON = cifras;
 });
-
 
 
 
