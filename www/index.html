@@ -7,14 +7,14 @@
 .cifra-mono{
   display: none;
 }
-.cifra, .controls {
+li.first_line, .controls {
   padding: 20px;
   background: lightblue;
   display: block;
   font-weight: bold;
   font-size: 25px;
 }
-.cifra{
+li.first_line{
   border: 1px solid #93B9C5;
   margin-bottom: 20px;
 }
@@ -35,7 +35,17 @@ b[class*='_i'], .chords {
 
 <body></body>
 <script>
+///////////////////UTILITY
+function util_error(message){
+   console.log('%c' +message, 'color: red');
+}
+///////////////////////////
+
+
+
 //http://jsfiddle.net/4vTvW/3/
+//
+////change previous page to previous route
 filename = "includes/cifras.html";
 var load_cifras = $.get( filename, function( data ) {
   $('body').append(data);
@@ -72,13 +82,16 @@ var load_cifras = $.get( filename, function( data ) {
 });
 
 
-
+//DEFAULTS
 window.app = {
   current_page: ''
   ,previous_page:''
   ,url:''
   ,file:''
-  ,cifra: {}
+  ,cifra: {
+    id:undefined,
+    history:[]
+  }
   ,view:{}
   ,pages:{}
   ,collection:{}
@@ -113,7 +126,7 @@ load_cifras.done(function(){
   app.view.home_page = app.view.page.extend({
     name: 'home' 
     ,events:{
-      'click .cifra': 'change_page'
+      'click li.first_line': 'change_page'
     }
     ,render: function(){
       this.draw_list();
@@ -122,14 +135,29 @@ load_cifras.done(function(){
     ,draw_list:function(){
       var that = this;
       var i = 1;
+      // this.$el.append('<li class="first_line">History</li>');
       this.collection.each(function(model){
-        that.$el.append('<li class="cifra" id=' + i + '>' + model.get('first_line') + '</li>');
+        that.$el.append('<li class="first_line" id=' + i + '>' + model.get('first_line') + '</li>');
         i++;
       });
     }
     ,change_page:function(ev){
+      this.record_history(ev.target.id-1);
       app.cifra.id = ev.target.id-1;
       app.route.navigate('cifra/'+app.cifra.id, {trigger: true});
+    }
+    ,record_history:function(id){ 
+         if( isNaN(id) ){
+            util_error('Custom Error: "'+id+'" must be an intenger.  Attempted to record the history but cannot.  See what the id of the element you clicked is called.\nFile: '+ app.file+'\nRoute:"'+app.routing+'"');
+            return false;
+         }
+         
+         var history =  app.cifra.history;
+         var i = history.indexOf(id)
+         if( i != -1){ //no duplicates
+            history.splice(i, 1);
+         }
+         history.unshift(id); 
     }
   });
 
@@ -140,7 +168,7 @@ load_cifras.done(function(){
     }
     ,render: function(){
       this.$el.animate({ scrollTop: 0 }, 0); //scroll to the top of page
-          this.add_css();
+      this.add_css();
       this.$el.append('<pre>'+this.collection.at(app.cifra.id).get('html')+'</pre>');
       this.draw_controls();
       return this;
@@ -150,6 +178,7 @@ load_cifras.done(function(){
     }
     ,back:function(ev){
       if(app.previous_page){
+         console.log(app.previous_page);
         app.route.navigate('', {trigger: true});
         this.remove_css();
       }
@@ -181,9 +210,9 @@ load_cifras.done(function(){
     }
     ,draw_cifra: function(id){
       if(app.cifra['id'] == undefined){
-        app.router.navigate('', {trigger: true});
-        console.log('Custom Warning: app.cifra.id was not set.  May be because you arrived at the previous route incorrectly, therefore the page was redirected.\nFile: '+ app.file+'\nRoute:"'+app.routing+'"');
-        return;
+        app.route.navigate('', {trigger: true});
+        util_error('Custom Warning: app.cifra.id was not set.  May be because you arrived at the previous route incorrectly, therefore the page was redirected.\nFile: '+ app.file+'\nRoute:"'+app.routing+'"');
+        return false;
       }
       this.initiate('cifra_page');
     }
