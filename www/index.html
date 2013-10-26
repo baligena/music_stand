@@ -3,6 +3,7 @@
 <script src="js/backbone-min.js"></script>
 
 
+
 <style>
 .cifra-mono{
   display: none;
@@ -31,9 +32,34 @@ li.first_line{
 b[class*='_i'], .chords {
   color:red 
 }
+
+
+
+
+ul.controls{
+   overflow:hidden;
+   background: rgb(0, 26, 3);
+   color: white;
+   position: fixed;
+   left: 0;
+   width: 100%;
+   bottom: 0;
+   margin: 0px;
+   padding: 0px;
+}
+.controls li {
+   float: left;
+   padding:15px;
+   margin-right: 10px;
+   display: block;
+}
+
+
 </style>
 
-<body></body>
+<body>
+<main></main>
+</body>
 <script>
 ///////////////////UTILITY
 function util_error(message){
@@ -44,11 +70,10 @@ function util_error(message){
 
 
 //http://jsfiddle.net/4vTvW/3/
-//
-////change previous page to previous route
+
 filename = "includes/cifras.html";
 var load_cifras = $.get( filename, function( data ) {
-  $('body').append(data);
+  $('main').append(data);
     fl_length = 50;
     var songs = new Array();
     var s;
@@ -84,9 +109,7 @@ var load_cifras = $.get( filename, function( data ) {
 
 //DEFAULTS
 window.app = {
-  current_page: ''
-  ,previous_page:''
-  ,url:''
+  url:''
   ,file:''
   ,cifra: {
     id:undefined,
@@ -97,61 +120,50 @@ window.app = {
   ,collection:{}
   ,router:{}
   ,data:{}
+  ,URN:{
+      current:'',
+      previous:'',
+  }
 }
 
-load_cifras.done(function(){
+
 
   app.view.page = Backbone.View.extend({
     //DEFAULTS
-    el: 'body'
+    el: 'main'
+
     ,name: 'SET page NAME, CURRENTLY COMING FROM PARENT'
-    ,initialize:function(){
+    ,initialize:function(options){
+      //initialize runs only once when object is initiated
       this.clear_page();
-      app.previous_page = app.current_page;
-      app.current_page = this;
+      this.options = options;
       app.url = document.URL;
       app.file = location.pathname;
-      app.routing = location.hash;
       _.bindAll(this, 'render');
       this.render();
     }
-    ,clear_page:function(){
-      var deferred = new $.Deferred();
-      this.$el.html('');
-      deferred.resolve();
-      return deferred;
-    }
-  });
-
-  app.view.home_page = app.view.page.extend({
-    name: 'home' 
-    ,events:{
-      'click li.first_line': 'change_page'
-    }
-    ,render: function(){
-      this.draw_list();
-      return this;
-    }
-    ,draw_list:function(){
-      var that = this;
-      var i = 1;
-      // this.$el.append('<li class="first_line">History</li>');
-      this.collection.each(function(model){
-        that.$el.append('<li class="first_line" id=' + i + '>' + model.get('first_line') + '</li>');
-        i++;
-      });
+    ,set_URN:function(){
+      app.URN.previous = app.URN.current;
+      app.URN.current = location.hash;
     }
     ,change_page:function(ev){
-      this.record_history(ev.target.id-1);
-      app.cifra.id = ev.target.id-1;
-      app.route.navigate('cifra/'+app.cifra.id, {trigger: true});
+         this.record_history(ev.target.id-1);
+         app.cifra.id = ev.target.id-1;
+         if(ev.target.className == 'first_line'){
+            app.route.navigate('cifra/'+app.cifra.id, {trigger: true});
+         }
+         else{
+            app.route.navigate(ev.target.id, {trigger: true});
+            console.log($(ev.target).html());
+            //controls css
+            $('.controls li').css('background','rgb(0, 26, 3)');
+            $(ev.target).css('background','grey');
+         }
     }
-    ,record_history:function(id){ 
-         if( isNaN(id) ){
-            util_error('Custom Error: "'+id+'" must be an intenger.  Attempted to record the history but cannot.  See what the id of the element you clicked is called.\nFile: '+ app.file+'\nRoute:"'+app.routing+'"');
+     ,record_history:function(id){ 
+         if( isNaN(id) || id == -1){ //only record the cifra pages that has an id set to a number greater than -1
             return false;
          }
-         
          var history =  app.cifra.history;
          var i = history.indexOf(id)
          if( i != -1){ //no duplicates
@@ -159,40 +171,78 @@ load_cifras.done(function(){
          }
          history.unshift(id); 
     }
+    ,clear_page:function(){
+      var deferred = new $.Deferred();
+      this.$el.html('');
+      deferred.resolve('hello world');
+      return deferred;
+    }
   });
+
+    app.view.controls = app.view.page.extend({
+        el: 'body'
+        ,events:{
+            'click .controls li': 'change_page'
+        }
+        ,initialize:function(){
+            this.draw_controls();
+        }
+        ,draw_controls:function(){
+            this.$el.append('<ul class="controls"></ul>');
+            var ul = $('ul.controls');
+            ul.append('<li id="">Home</li>');      
+            ul.append('<li id="history">History</li>');      
+        }
+    });
+
+  app.view.navigation = app.view.page.extend({
+     render: function(){
+      this.set_URN();
+      this.draw_list();
+      return this;
+    }
+    ,draw_list:function(){
+      var that = this;
+      var i = 1;
+      this.collection.each(function(model){
+        that.$el.append('<li class="first_line" id=' + i + '>' + model.get('first_line') + '</li>');
+        i++;
+      });
+    }
+
+  })
+
+
+  app.view.home_page = app.view.navigation.extend({
+    name: 'home' 
+     ,events:{
+      'click li': 'change_page'
+    }
+
+  });
+
+   app.view.history_page = app.view.navigation.extend({
+    //if you load the history page directly theres no events to make the navigation work
+        name: 'history'
+        ,draw_list:function(){
+             var that = this;
+             var history = app.cifra.history;
+             $.each(history, function(key, value){
+                if(value != undefined){
+                    that.$el.append('<li class="first_line" id=' + (value+1) + '>' + that.collection.at(value).get('first_line') + '</li>');
+                }
+         });
+      }
+   });
 
   app.view.cifra_page = app.view.page.extend({
     name: 'cifra'
-    ,events:{
-      'click .controls': 'back',
-    }
     ,render: function(){
+      this.set_URN();
       this.$el.animate({ scrollTop: 0 }, 0); //scroll to the top of page
-      this.add_css();
       this.$el.append('<pre>'+this.collection.at(app.cifra.id).get('html')+'</pre>');
-      this.draw_controls();
       return this;
     }
-    ,draw_controls:function(){
-      this.$el.append('<li class="controls">Back</li>');
-    }
-    ,back:function(ev){
-      if(app.previous_page){
-         console.log(app.previous_page);
-        app.route.navigate('', {trigger: true});
-        this.remove_css();
-      }
-      else{
-        console.log('Custom Error: no previous_page');
-      }
-    }
-    ,add_css:function(){
-      this.$el.css('padding-bottom', '90px');
-    }
-    ,remove_css:function(){
-      this.$el.css('padding-bottom', '0px');
-    }
-
   });
 
   app.collection.cifras = Backbone.Collection.extend({
@@ -204,39 +254,51 @@ load_cifras.done(function(){
       // "route", "fuction name",
       "": "draw_home",
       "cifra/:id": "draw_cifra", //eg: URL/#/cifra/12
+      "history": "draw_history"
+    }
+    ,initialize:function(){
+        new app.view.controls(); 
+        app.data.collection = new app.collection.cifras(app.data.JSON);
     } 
     ,draw_home:function(){
-      this.initiate('home_page');
+      this.initiate('home_page','{collection: app.data.collection}');
     }
     ,draw_cifra: function(id){
       if(app.cifra['id'] == undefined){
         app.route.navigate('', {trigger: true});
-        util_error('Custom Warning: app.cifra.id was not set.  May be because you arrived at the previous route incorrectly, therefore the page was redirected.\nFile: '+ app.file+'\nRoute:"'+app.routing+'"');
+        util_error('Custom Warning: app.cifra.id was not set.  May be because you arrived at the previous route incorrectly, therefore the page was redirected.\nFile: '+ app.file+'\nRoute:"'+app.URN.current+'"');
         return false;
       }
-      this.initiate('cifra_page');
+      this.initiate('cifra_page','{collection: app.data.collection}');
     }
-    ,initiate:function(view){
+   ,draw_history:function(){
+      this.initiate('history_page','{collection: app.data.collection}');
+   }
+   ,initiate:function(view, param){
       page = app.pages[view];
       if(!page){  //exist?
-        app.pages[view] = eval('new app.view.'+ view + '({collection: new app.collection.cifras(app.data.JSON)})');
+        app.pages[view] = eval('new app.view.'+ view + '('+param+')');
       }
       else{
-        page.clear_page().done(function(){
-          page.render();
-        });
+         page.clear_page().done(function(n){
+            page.render();
+            // console.log(n);
+         });
       }
     }
 
   });
-  app.route = new app.router.music_stand;
+  
+
+load_cifras.done(function(){
+   app.route = new app.router.music_stand;
 
 
-  $(function(){
+
+   $(function(){
     Backbone.history.start();
-  })
+   })
 });
-
 </script>
 
 
