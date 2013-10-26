@@ -21,7 +21,6 @@ li.first_line{
   margin-bottom: 20px;
 }
 .null{
-    border: 1px solid red;
   height: 50px;
   display: block;
   margin-bottom: 20px;
@@ -151,7 +150,6 @@ window.app = {
     }
     ,change_page:function(ev){
         $('.controls li').css('background','rgb(0, 26, 3)');
-        this.$el.animate({ scrollTop: 0 }, 0); //scroll to the top of page
 
          this.record_history(ev.target.id-1);
          app.cifra.id = ev.target.id-1;
@@ -164,6 +162,8 @@ window.app = {
             //controls css
             $(ev.target).css('background','grey');
          }
+         $('body').animate({ scrollTop: 0 }, 0); //scroll to the top of page
+
     }
      ,record_history:function(id){ 
          if( isNaN(id) || id == -1){ //only record the cifra pages that has an id set to a number greater than -1
@@ -193,13 +193,13 @@ window.app = {
             this.draw_controls();
         }
         ,draw_controls:function(){
-          this.$el.append('<li class="null"></li>'); //hack that make the control navigation not overlap/clear
-
+            this.$el.append('<li class="null"></li>'); //hack that make the control navigation not overlap/clear
+            
             this.$el.append('<ul class="controls"></ul>');
             var ul = $('ul.controls');
             ul.append('<li id="">Alpha</li>');      
             ul.append('<li id="history">History</li>');      
-            ul.append('<li id="version">v1.1.8.6</li>');      
+            ul.append('<li id="version">v1.1.8.7</li>');      
         }
     });
 
@@ -249,7 +249,7 @@ window.app = {
     name: 'cifra'
     ,render: function(){
       this.set_URN();
-      $('body').animate({ scrollTop: 0 }, 0); //scroll to the top of page
+      // $('body').animate({ scrollTop: 0 }, 0); //scroll to the top of page
       this.$el.append('<pre>'+this.collection.at(app.cifra.id).get('html')+'</pre>');
       return this;
     }
