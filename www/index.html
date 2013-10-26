@@ -32,7 +32,9 @@ li.first_line{
 b[class*='_i'], .chords {
   color:red 
 }
-
+main{
+    margin-bottom: 90px;
+}
 
 
 
@@ -131,7 +133,6 @@ window.app = {
   app.view.page = Backbone.View.extend({
     //DEFAULTS
     el: 'main'
-
     ,name: 'SET page NAME, CURRENTLY COMING FROM PARENT'
     ,initialize:function(options){
       //initialize runs only once when object is initiated
@@ -147,6 +148,9 @@ window.app = {
       app.URN.current = location.hash;
     }
     ,change_page:function(ev){
+        $('.controls li').css('background','rgb(0, 26, 3)');
+        this.$el.animate({ scrollTop: 0 }, 0); //scroll to the top of page
+
          this.record_history(ev.target.id-1);
          app.cifra.id = ev.target.id-1;
          if(ev.target.className == 'first_line'){
@@ -156,7 +160,6 @@ window.app = {
             app.route.navigate(ev.target.id, {trigger: true});
             console.log($(ev.target).html());
             //controls css
-            $('.controls li').css('background','rgb(0, 26, 3)');
             $(ev.target).css('background','grey');
          }
     }
