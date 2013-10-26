@@ -15,8 +15,15 @@ li.first_line, .controls {
   font-weight: bold;
   font-size: 25px;
 }
+
 li.first_line{
   border: 1px solid #93B9C5;
+  margin-bottom: 20px;
+}
+.null{
+    border: 1px solid red;
+  height: 50px;
+  display: block;
   margin-bottom: 20px;
 }
 
@@ -32,11 +39,6 @@ li.first_line{
 b[class*='_i'], .chords {
   color:red 
 }
-main{
-    margin-bottom: 150px;
-}
-
-
 
 ul.controls{
    overflow:hidden;
@@ -191,6 +193,8 @@ window.app = {
             this.draw_controls();
         }
         ,draw_controls:function(){
+          this.$el.append('<li class="null"></li>'); //hack that make the control navigation not overlap/clear
+
             this.$el.append('<ul class="controls"></ul>');
             var ul = $('ul.controls');
             ul.append('<li id="">Alpha</li>');      
@@ -212,6 +216,8 @@ window.app = {
         that.$el.append('<li class="first_line" id=' + i + '>' + model.get('first_line') + '</li>');
         i++;
       });
+      
+
     }
 
   })
@@ -220,7 +226,7 @@ window.app = {
   app.view.home_page = app.view.navigation.extend({
     name: 'home' 
      ,events:{
-      'click li': 'change_page'
+      'click li.first_line': 'change_page'
     }
 
   });
@@ -236,14 +242,14 @@ window.app = {
                     that.$el.append('<li class="first_line" id=' + (value+1) + '>' + that.collection.at(value).get('first_line') + '</li>');
                 }
          });
-      }
+        }
    });
 
   app.view.cifra_page = app.view.page.extend({
     name: 'cifra'
     ,render: function(){
       this.set_URN();
-      this.$el.animate({ scrollTop: 0 }, 0); //scroll to the top of page
+      $('body').animate({ scrollTop: 0 }, 0); //scroll to the top of page
       this.$el.append('<pre>'+this.collection.at(app.cifra.id).get('html')+'</pre>');
       return this;
     }
