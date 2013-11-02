@@ -73,7 +73,6 @@ function util_error(message){
 
 
 //http://jsfiddle.net/4vTvW/3/
-
 filename = "includes/cifras.html";
 var load_cifras = $.get( filename, function( data ) {
   $('main').append(data);
@@ -93,8 +92,8 @@ var load_cifras = $.get( filename, function( data ) {
     }
     // sort songs by first line
     songs.sort(function(a, b) {
-        if(a.first_line < b.first_line) return -1;
-        if(a.first_line > b.first_line) return 1;
+        if(a.first_line.toLowerCase() < b.first_line.toLowerCase()) return -1;
+        if(a.first_line.toLowerCase() > b.first_line.toLowerCase()) return 1;
         return 0;
     });
 
