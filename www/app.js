@@ -2,6 +2,7 @@
 function util_error(message){
    console.log('%c' +message, 'color: red');
 }
+///////////////////////////
 window.onerror = function(a,b,c){
   alert(a+'\n'+b+'\n'+c);
 }
@@ -27,8 +28,8 @@ window.app = {
 }
 
 
-///////////////////////////
-var get_data = function(){
+
+var get_data_mobile = function(){
     var deferred = new $.Deferred();
     try{
         if(navigator.network.connection.type == 'none'){
@@ -54,33 +55,22 @@ var get_data = function(){
 }
 
 
-var get_data2 = function(){
+var get_data_browser = function(){
     var deferred = new $.Deferred();
-    console.log('internte');
+    // console.log('internet');
     return $.get( "http://mail.baligena.com/convert_music_stand?download", function( data ) {
                 window.app.data.JSON = JSON.parse(data);
                 localStorage.setItem('cifras', JSON.stringify(app.data.JSON));
             });
-    var retrievedObject = localStorage.getItem('cifras');
-    console.log('localstorage');
-    window.app.data.JSON = JSON.parse(retrievedObject);
-    deferred.resolve();
-    return deferred
-    // // Retrieve the object from storage
-    // var retrievedObject = localStorage.getItem('testObject');
-
-    // console.log('retrievedObject: ', JSON.parse(retrievedObject));
-
-    // alert(JSON.parse(retrievedObject)[0]['date'] );
+    // var retrievedObject = localStorage.getItem('cifras');
+    // console.log('localstorage');
+    // window.app.data.JSON = JSON.parse(retrievedObject);
+    // deferred.resolve();
+    // return deferred
 }
 
 
-var load_cifras = (/Chrome/i.test(navigator.userAgent) ? get_data2() : get_data());
-
-
-
-
-
+var load_cifras = (/Chrome/i.test(navigator.userAgent) ? get_data_browser() : get_data_mobile());
 
 app.view.page = Backbone.View.extend({
   //DEFAULTS
@@ -148,13 +138,15 @@ app.view.page = Backbone.View.extend({
           
           this.$el.append('<ul class="controls"></ul>');
           var ul = $('ul.controls');
+          //when you add a page route is should automatically be created a page
           ul.append('<li id="">Alpha</li>');      
           ul.append('<li id="history">History</li>');      
+          ul.append('<li id="history">Info</li>');      
           ul.append('<li id="version">v2.0.0</li>');      
       }
   });
 
-app.view.navigation = app.view.page.extend({
+app.view.nav_list = app.view.page.extend({
    render: function(){
     this.set_URN();
     this.draw_list();
@@ -172,15 +164,14 @@ app.view.navigation = app.view.page.extend({
 })
 
 
-app.view.home_page = app.view.navigation.extend({
+app.view.home_page = app.view.nav_list.extend({
   name: 'home' 
    ,events:{
     'click li.first_line': 'change_page'
   }
-
 });
 
- app.view.history_page = app.view.navigation.extend({
+ app.view.history_page = app.view.nav_list.extend({
   //if you load the history page directly theres no events to make the navigation work
       name: 'history'
       ,draw_list:function(){
