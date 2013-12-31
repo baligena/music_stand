@@ -56,12 +56,11 @@ var get_data_mobile = function(){
 
 
 var get_data_browser = function(){
-    var deferred = new $.Deferred();
-    // console.log('internet');
     return $.get( "http://mail.baligena.com/convert_music_stand?download", function( data ) {
                 window.app.data.JSON = JSON.parse(data);
                 localStorage.setItem('cifras', JSON.stringify(app.data.JSON));
             });
+    // var deferred = new $.Deferred();
     // var retrievedObject = localStorage.getItem('cifras');
     // console.log('localstorage');
     // window.app.data.JSON = JSON.parse(retrievedObject);
@@ -70,7 +69,11 @@ var get_data_browser = function(){
 }
 
 
-var load_cifras = (/Chrome/i.test(navigator.userAgent) ? get_data_browser() : get_data_mobile());
+// var load_cifras = (/Chrome/i.test(navigator.userAgent) ? get_data_browser() : get_data_mobile());
+
+var load_cifras = function(){
+    return (/Chrome/i.test(navigator.userAgent) ? get_data_browser() : get_data_mobile());
+}
 
 app.view.page = Backbone.View.extend({
     //DEFAULTS
@@ -90,6 +93,7 @@ app.view.page = Backbone.View.extend({
         app.URN.current = location.hash;
     }
     ,change_page:function(ev){
+        // console.log('change page'); //check for duplicates
         $('.controls li').css('background','rgb(0, 26, 3)');
 
         this.record_history(ev.target.id-1);
@@ -152,34 +156,35 @@ app.view.nav_list = app.view.page.extend({
         this.set_URN();
         this.draw_list();
         return this;
-  } 
-  ,draw_list:function(){
-    var that = this;
-    var i = 1;
-    this.collection.each(function(model){
-      that.$el.append('<li class="first_line" id=' + i + '>' + model.get('first_line') + '</li>');
-      i++;
-    });
-  }
+    } 
+    ,draw_list:function(){
+        var that = this;
+        var i = 1;
+        app.data.collection.each(function(model){
+            that.$el.append('<li class="first_line" id=' + i + '>' + model.get('first_line') + '</li>');
+            i++;
+        });
+    }
 })
 
 
 app.view.home_page = app.view.nav_list.extend({
-  name: 'home' 
-   ,events:{
-    'click li.first_line': 'change_page'
-  }
+    name: 'home' 
+    ,events:{
+        'click li.first_line': 'change_page'
+    }
 });
 
 app.view.history_page = app.view.nav_list.extend({
- //if you load the history page directly theres no events to make the navigation work
+    //if you load the history page directly theres no events to make the navigation work
     name: 'history'
     ,draw_list:function(){
        var that = this;
        var history = app.cifra.history;
        $.each(history, function(key, value){
           if(value != undefined){
-              that.$el.append('<li class="first_line" id=' + (value+1) + '>' + that.collection.at(value).get('first_line') + '</li>');
+              // that.$el.append('<li class="first_line" id=' + (value+1) + '>' + that.collection.at(value).get('first_line') + '</li>');
+              that.$el.append('<li class="first_line" id=' + (value+1) + '>' + app.data.collection.at(value).get('first_line') + '</li>');
           }
        });
     }     
@@ -190,7 +195,7 @@ app.view.cifra_page = app.view.page.extend({
     ,render: function(){
         this.set_URN();
         // $('body').animate({ scrollTop: 0 }, 0); //scroll to the top of page
-        this.$el.append('<pre>'+this.collection.at(app.cifra.id).get('html')+'</pre>');
+        this.$el.append('<pre>'+app.data.collection.at(app.cifra.id).get('html')+'</pre>');
         return this;
     }
 });
@@ -201,7 +206,16 @@ app.view.info_page = app.view.page.extend({
         this.$el.append('<p>info page</p>');
         this.$el.append('<p>any errors?</p>');
         this.$el.append('<p>Is internet on?</p>');
+        this.$el.append('<span id="update_list">Update Cifras</span>');
         return this;
+    }
+    ,events:{
+        'click #update_list':'update_list'
+    }
+    ,update_list: function(){
+        load_cifras().done(function(){
+            app.data.collection = new app.collection.cifras(app.data.JSON);
+        });
     }
 });
 
@@ -222,7 +236,8 @@ app.router.music_stand = Backbone.Router.extend({
           app.data.collection = new app.collection.cifras(app.data.JSON);
     } 
     ,draw_home:function(){
-        this.render_view('home_page','{collection: app.data.collection}');
+        // this.render_view('home_page','{collection: app.data.collection}');
+        this.render_view('home_page');
     }
     ,draw_cifra: function(id){
         if(app.cifra['id'] == undefined){
@@ -230,31 +245,36 @@ app.router.music_stand = Backbone.Router.extend({
           util_error('Custom Warning: app.cifra.id was not set.  May be because you arrived at the previous route incorrectly, therefore the page was redirected.\nFile: '+ app.file+'\nRoute:"'+app.URN.current+'"');
           return false;
         }
-        this.render_view('cifra_page','{collection: app.data.collection}');
+        // this.render_view('cifra_page','{collection: app.data.collection}');
+        this.render_view('cifra_page');
     }
     ,draw_history:function(){
-        this.render_view('history_page','{collection: app.data.collection}');
+        // this.render_view('history_page','{collection: app.data.collection}');
+        this.render_view('history_page');
     }
     ,draw_info:function(){
         this.render_view('info_page');    
     }
-    ,render_view:function(view, param){
+    // ,render_view:function(view, param){
+    ,render_view:function(view){
         page = app.pages[view];
         if(!page){  //exist?
-          app.pages[view] = eval('new app.view.'+ view + '('+param+')');
+          // app.pages[view] = eval('new app.view.'+ view + '('+param+')');
+          app.pages[view] = eval('new app.view.'+ view);
         }
         else{
-           page.clear_page().done(function(n){
-              page.render();
-              // console.log(n);
-           });
+            page.clear_page().done(function(n){
+                page.render();
+                // console.log(n);
+            });
         }
     }
 
 });
   
 
-load_cifras.done(function(){
+
+load_cifras().done(function(){
    app.route = new app.router.music_stand;
        if(Backbone.History.started == false){
             Backbone.history.start(); 
