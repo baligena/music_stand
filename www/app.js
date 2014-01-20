@@ -35,7 +35,6 @@ var get_data_mobile = function(){
         if(navigator.network.connection.type == 'none'){
             alert('get from localstorage');
             var retrievedObject = localStorage.getItem('cifras');
-            console.log('localstorage');
             window.app.data.JSON = JSON.parse(retrievedObject);
             deferred.resolve();
         }
@@ -51,9 +50,7 @@ var get_data_mobile = function(){
         deferred.reject();
     }
     return deferred;
-
 }
-
 
 var get_data_browser = function(){
     return $.get( "http://mail.baligena.com/convert_music_stand?download", function( data ) {
@@ -68,8 +65,6 @@ var get_data_browser = function(){
     // return deferred
 }
 
-
-// var load_cifras = (/Chrome/i.test(navigator.userAgent) ? get_data_browser() : get_data_mobile());
 
 var load_cifras = function(){
     return (/Chrome/i.test(navigator.userAgent) ? get_data_browser() : get_data_mobile());
@@ -147,7 +142,7 @@ app.view.page = Backbone.View.extend({
           ul.append('<li id="">Alpha</li>');      
           ul.append('<li id="history">History</li>');      
           ul.append('<li id="info">Info</li>');      
-          ul.append('<li id="version">v2.0.0</li>');      
+          ul.append('<li id="version">v2.0.3</li>');      
       }
   });
 
@@ -166,7 +161,6 @@ app.view.nav_list = app.view.page.extend({
         });
     }
 })
-
 
 app.view.home_page = app.view.nav_list.extend({
     name: 'home' 

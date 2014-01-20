@@ -1,47 +1,52 @@
 .cifra-mono{
-  display: none;
+    display: none;
 }
 li.first_line, .controls {
-  padding: 20px;
-  background: lightblue;
-  display: block;
-  font-weight: bold;
-  font-size: 25px;
+    padding: 20px;
+    background: lightblue;
+    display: block;
+    font-weight: bold;
+    font-size: 25px;
 }
 
 li.first_line{
-  border: 1px solid #93B9C5;
-  margin-bottom: 20px;
+    border: 1px solid #93B9C5;
+    margin-bottom: 20px;
 }
 .null{
-  height: 50px;
-  display: block;
-  margin-bottom: 20px;
+    height: 50px;
+    display: block;
+    margin-bottom: 20px;
 }
 
 .controls {
-  background: rgb(0, 26, 3);
-  color: white;
-  position: fixed;
-  left:0;
-  width: 100%;
-  bottom: 0;
+    background: rgb(0, 26, 3);
+    color: white;
+    position: fixed;
+    left:0;
+    width: 100%;
+    bottom: 0;
 }
 
-b[class*='_i'], .chords {
-  color:red 
+b[class*='_i'], .chords, .chords2 {
+    color:red;
+}
+
+.chords2, .words { /* new class for new songs after 2014-01-20. change the chords spacing because the space in the form in convert_music_stand is not the same */
+    word-spacing: -4px;
+    font-family: monospace;
 }
 
 ul.controls{
-   overflow:hidden;
-   background: rgb(0, 26, 3);
-   color: white;
-   position: fixed;
-   left: 0;
-   width: 100%;
-   bottom: 0;
-   margin: 0px;
-   padding: 0px;
+    overflow:hidden;
+    background: rgb(0, 26, 3);
+    color: white;
+    position: fixed;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    margin: 0px;
+    padding: 0px;
 }
 .controls li {
    float: left;
