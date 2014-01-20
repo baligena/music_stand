@@ -32,10 +32,10 @@ b[class*='_i'], .chords, .chords2 {
     color:red;
 }
 
-.chords2, .words { /* new class for new songs after 2014-01-20. change the chords spacing because the space in the form in convert_music_stand is not the same */
+/*.chords2, .words {  new class for new songs after 2014-01-20. change the chords spacing because the space in the form in convert_music_stand is not the same 
     word-spacing: -4px;
     font-family: monospace;
-}
+}*/
 
 ul.controls{
     overflow:hidden;
