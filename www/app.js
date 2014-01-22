@@ -27,47 +27,42 @@ window.app = {
   }
 }
 
+var get_data = {
+    source: 'http://fsq.baligena.com/convert_music_stand?download'
 
-
-var get_data_mobile = function(){
-    var deferred = new $.Deferred();
-    try{
-        if(navigator.network.connection.type == 'none'){
-            alert('get from localstorage');
-            var retrievedObject = localStorage.getItem('cifras');
-            window.app.data.JSON = JSON.parse(retrievedObject);
-            deferred.resolve();
+    ,mobile: function()
+    {
+        var deferred = new $.Deferred();
+        try{
+            if(navigator.network.connection.type == 'none'){
+                alert('get from localstorage');
+                var retrievedObject = localStorage.getItem('cifras');
+                window.app.data.JSON = JSON.parse(retrievedObject);
+                deferred.resolve();
+            }
+            else{
+                return $.get( this.source, function( data ) {
+                    window.app.data.JSON = JSON.parse(data);
+                    localStorage.setItem('cifras', JSON.stringify(app.data.JSON));
+                });
+            }
         }
-        else{
-            return $.get( "http://mail.baligena.com/convert_music_stand?download", function( data ) {
-                window.app.data.JSON = JSON.parse(data);
-                localStorage.setItem('cifras', JSON.stringify(app.data.JSON));
-            });
+        catch(e){
+            alert('Device not ready, should try again');
+            deferred.reject();
         }
+        return deferred;
     }
-    catch(e){
-        alert('Device not ready, should try again');
-        deferred.reject();
+    ,browser:function(){
+        return $.get( this.source, function( data ) {
+            window.app.data.JSON = JSON.parse(data);
+            localStorage.setItem('cifras', JSON.stringify(app.data.JSON));
+        });
     }
-    return deferred;
 }
-
-var get_data_browser = function(){
-    return $.get( "http://mail.baligena.com/convert_music_stand?download", function( data ) {
-                window.app.data.JSON = JSON.parse(data);
-                localStorage.setItem('cifras', JSON.stringify(app.data.JSON));
-            });
-    // var deferred = new $.Deferred();
-    // var retrievedObject = localStorage.getItem('cifras');
-    // console.log('localstorage');
-    // window.app.data.JSON = JSON.parse(retrievedObject);
-    // deferred.resolve();
-    // return deferred
-}
-
 
 var load_cifras = function(){
-    return (/Chrome/i.test(navigator.userAgent) ? get_data_browser() : get_data_mobile());
+    return (/Chrome/i.test(navigator.userAgent) ? get_data.browser() : get_data.mobile());
 }
 
 app.view.page = Backbone.View.extend({
